@@ -7,3 +7,12 @@ DEBUG:root:[             nan   5.65310000e+04   6.35894390e+01   4.40575000e+05
               nan]
 DEBUG:root:number of leaves: 151867
 DEBUG:root:max depth: 26
+DEBUG:root:(9, 208976)
+DEBUG:root:[             nan   1.00000000e+00  -3.39449405e+01  -1.57832506e+02
+  -1.01753267e+02   7.50000000e-02   5.10000000e+01   6.34802300e+06
+              nan]
+DEBUG:root:[             nan   5.65310000e+04   6.35894390e+01   4.40575000e+05
+   4.49873657e+02   1.00000000e-01   5.20000000e+01   1.45316737e+12
+              nan]
+DEBUG:root:number of leaves: 151867
+DEBUG:root:max depth: 26

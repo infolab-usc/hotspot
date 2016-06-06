@@ -14,12 +14,12 @@ Field of View
 class FOV(object):
     id = 0
 
-    def __init__(self):
-        self.lat = 0.0
-        self.lon = 0.0
-        self.compass = 0
-        self.alpha = 60
-        self.R = 250
+    # def __init__(self):
+    #     self.lat = 0.0
+    #     self.lon = 0.0
+    #     self.compass = 0
+    #     self.alpha = 60
+    #     self.R = 250
 
     def __init__(self, geojson):
         self.lat = geojson.geometry.coordinates[1]
@@ -28,12 +28,12 @@ class FOV(object):
         self.R = float(geojson.properties['r']) * 200
         self.alpha = float(geojson.properties['alpha'])
 
-    def __init__(self, lat, lon, compass, R, alpha):
-        self.lat = lat
-        self.lon = lon
-        self.compass = compass
-        self.R = R
-        self.alpha = alpha
+    # def __init__(self, lat, lon, compass, R, alpha):
+    #     self.lat = lat
+    #     self.lon = lon
+    #     self.compass = compass
+    #     self.R = R
+    #     self.alpha = alpha
 
     def metadata(self):
         return self.lat, self.lon, self.compass, self.alpha, self.R

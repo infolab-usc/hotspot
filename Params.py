@@ -23,6 +23,8 @@ class Params(object):
     ANALYST_COUNT = 256
 
     GRID_SIZE = 200
+    AREA_UNIT_CELL = 0.000025
+    MINIMUM_FOV_COUNT = 1
 
     def __init__(self, seed, x_min = None, y_min = None, x_max = None, y_max = None):
         self.Seed = seed
@@ -41,7 +43,7 @@ class Params(object):
 
     def select_dataset(self):
         if Params.DATASET == "mediaq":
-            self.dataset = 'FOVMetadata.txt'
+            self.dataset = 'dataset/FOVMetadata.txt'
             self.resdir = '../../output/mediaq/'
             self.x_min = 34.018212
             self.y_min = -118.291716

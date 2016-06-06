@@ -61,9 +61,9 @@ class Tree(object):
     def testLeaf(self, curr):
         """ test whether a node should be a leaf node """
         if (curr.n_data is None or curr.n_data.shape[1] == 0) or \
-            curr.area() < 0.0004 or \
+            curr.area() < Params.AREA_UNIT_CELL or \
                 (curr.n_count <= self.param.minPartSize) or \
-                    rect_area(curr.n_box) < 0.0004:
+                    rect_area(curr.n_box) < Params.AREA_UNIT_CELL:
             return True
         return False
 

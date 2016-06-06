@@ -28,7 +28,7 @@ def mbr_to_cellids(mbr, param):
     #     for i in range(x_min_idx, x_max_idx + 1):
     #         cellids.append(j * param.GRID_SIZE + i)
 
-    return [(j * param.GRID_SIZE + i) for j in range(y_min_idx, y_max_idx + 1) for i in range(x_min_idx, x_max_idx + 1) if param.GRID_SIZE * param.GRID_SIZE>(j * param.GRID_SIZE + i) >= 0]
+    return [(j * param.GRID_SIZE + i) for j in range(y_min_idx, y_max_idx + 1) for i in range(x_min_idx, x_max_idx + 1) if param.GRID_SIZE * param.GRID_SIZE > (j * param.GRID_SIZE + i) >= 0]
 
 # Return coordinates of the cell given its index number
 def cell_coord(item, param):
