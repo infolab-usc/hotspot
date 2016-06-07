@@ -12,6 +12,7 @@ from UtilsBDR import *
 
 class Video(object):
 
+    devide_id = ""
     id = 0
     value = 0
     size = 0

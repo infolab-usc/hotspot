@@ -25,9 +25,9 @@ from UtilsBDR import mbr_to_cellids, cell_coord, distance_km
 url = "http://mediaq1.cloudapp.net/MediaQ_MVC_V3/api"
 validate_endpoint = 'http://geojsonlint.com/validate'
 
-VIDEO_FILE = "FOVMetadata.txt"
-IS_FROM_MEDIAQ = True # true --> obtain from mediaq; otherwise, retrieve from file
-
+VIDEO_FILE = "dataset/FOVMetadata.txt"
+IS_FROM_MEDIAQ = False # true --> obtain from mediaq; otherwise, retrieve from file
+VALIDATE_GEOJSON = False
 """
 videoid 0
 fovid 1
@@ -77,7 +77,7 @@ def read_fovs(file):
         # print str(vid), str(prev_vid)
         if vid == prev_vid:
             # lat, lon, compass, R, alpha
-            fov = FOV(data[idx][2],data[idx][3],data[idx][4],data[idx][7],data[idx][8])
+            fov = FOV(data[idx][2],data[idx][3],data[idx][4],data[idx][5],data[idx][6])
             fovs.append(fov)
         else:
             # new video
@@ -88,7 +88,7 @@ def read_fovs(file):
 
             # new fovs
             fovs = []
-            fov = FOV(data[idx][2],data[idx][3],data[idx][4],data[idx][7],data[idx][8])
+            fov = FOV(data[idx][2],data[idx][3],data[idx][4],data[idx][5],data[idx][6])
             fovs.append(fov)
 
         idx = idx + 1
@@ -118,9 +118,9 @@ geoq = sm.GeoqApi(sm.ApiClient(url, "X-API-KEY", "8b51UFM2SlBltx3s6864eUO1zSoefe
 """
 Returns a set of video locations that are captured within a time interval (startdate -> enddate)
 """
-# def get_videos(swlat=34.018212, swlng=-118.291716, nelat=34.025296, nelng=-118.279826, startdate="2014-04-13 00:00:00", enddate="2014-04-13 23:59:59"):
+def get_videos(swlat=34.018212, swlng=-118.291716, nelat=34.025296, nelng=-118.279826, startdate="2014-04-13 00:00:00", enddate="2016-04-13 23:59:59"):
 
-def get_videos(swlat=-90, swlng=-180, nelat=90, nelng=+180, startdate="2010-04-13 00:00:00", enddate="2017-04-13 23:59:59"):
+#def get_videos(swlat=-90, swlng=-180, nelat=90, nelng=+180, startdate="2010-04-13 00:00:00", enddate="2017-04-13 23:59:59"):
 
     valid_fc_videos = [] # with video of size > 0
 
@@ -131,10 +131,11 @@ def get_videos(swlat=-90, swlng=-180, nelat=90, nelng=+180, startdate="2010-04-1
         # print fc_videos
 
         # validate GEOJSON
-        geojson_validation = requests.post(validate_endpoint, data=fc_videos)
-        if geojson_validation.json()['status'] != 'ok':
-            print "Rectangle_query: Invalid geojson format"
-            exit()
+        if VALIDATE_GEOJSON == True:
+            geojson_validation = requests.post(validate_endpoint, data=fc_videos)
+            if geojson_validation.json()['status'] != 'ok':
+                print "Rectangle_query: Invalid geojson format"
+                exit()
 
         fc_videos = geojson.loads(fc_videos)
         print "Number of videos: " + str(len(fc_videos.features))
@@ -188,9 +189,10 @@ def getFOVs(vid):
     # Returns a set of video frames
     try:
         fovs = geoq.video_metadata(vid).replace('None','null').replace('u\'','\"').replace('\'','\"')
-        geojson_validation = requests.post(validate_endpoint, data=fovs)
-        if geojson_validation.json()['status'] != 'ok':
-            print "Video_metadata: Invalid geojson format"
+        if VALIDATE_GEOJSON == True:
+            geojson_validation = requests.post(validate_endpoint, data=fovs)
+            if geojson_validation.json()['status'] != 'ok':
+                print "Video_metadata: Invalid geojson format"
         fovs = geojson.loads(fovs)
     except Exception as inst:
         print vid
@@ -201,9 +203,23 @@ def getFOVs(vid):
 
 
 """
+Shannon entropy a list of frequencies
+"""
+def shanon_entropy_list(l):
+    if len(l) == 1:
+        return 0
+    total = 0
+    s = sum(l)
+    for v in l:
+        c = float(v) / s
+        total = total - c * np.log(c)
+    return total
+
+
+"""
 Compute coverage map (2D histogram)
 """
-def compute_coverage_map(grid_size = 20):
+def compute_coverage_map(grid_size = 100):
     swlat=34.018212
     swlng=-118.291716
     nelat=34.025296
@@ -244,6 +260,7 @@ def compute_coverage_map(grid_size = 20):
     fig, ax = plt.subplots()
     heatmap = ax.pcolor(map, cmap=plt.cm.Reds)
     plt.show()
+    plt.close()
     np.savetxt("mediaq_coverage_heatmap.txt" , map, fmt='%i\t')
 
 
